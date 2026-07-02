@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAJ Admission — Class 10 Online Admission Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1d4ed8;
+            --secondary: #7C3AED;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+            --gradient-1: linear-gradient(135deg, #2563EB, #7C3AED);
+            --gradient-2: linear-gradient(135deg, #7C3AED, #2563EB);
+            --gradient-3: linear-gradient(135deg, #2563EB, #10B981);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #2563EB #F1F5F9;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2563EB;
+            border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark {
+            --bg: #0F172A;
+            --card: #1E293B;
+            --text: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --border: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ==================== PAGE LOADER ==================== */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        body.dark #page-loader {
+            background: #0F172A;
+        }
+        #page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #E2E8F0;
+            border-top-color: #2563EB;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .loader-logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #2563EB;
+            margin-top: 16px;
+        }
+        body.dark .loader-logo {
+            color: #60A5FA;
+        }
+
+        /* ==================== TOAST NOTIFICATIONS ==================== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99990;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            animation: toast-in 0.4s ease, toast-out 0.4s ease 3s forwards;
+            max-width: 380px;
+            font-family: 'Inter', sans-serif;
+        }
+        .toast.success {
+            background: #10B981;
+        }
+        .toast.error {
+            background: #EF4444;
+        }
+        .toast.info {
+            background: #2563EB;
+        }
+        .toast.warning {
+            background: #F59E0B;
+            color: #1E293B;
+        }
+        @keyframes toast-in {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes toast-out {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* ==================== NAVIGATION ==================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 14px 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .navbar.scrolled {
+            padding: 10px 0;
+            box-shadow: var(--shadow-md);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-logo .logo-icon {
+            font-size: 1.8rem;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            transition: color var(--transition);
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            transition: width var(--transition);
+        }
+        .nav-links a:hover {
+            color: #2563EB;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            background: var(--gradient-1);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            box-shadow: 0 6px 28px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+        .nav-btn.outline {
+            background: transparent;
+            border: 2px solid #2563EB;
+            color: #2563EB;
+            box-shadow: none;
+        }
+        .nav-btn.outline:hover {
+            background: #2563EB;
+            color: #fff;
+        }
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+        .nav-hamburger span {
+            width: 26px;
+            height: 2.5px;
+            background: var(--text);
+            border-radius: 10px;
+            transition: all var(--transition);
+        }
+        .dark-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            color: var(--text);
+        }
+        .dark-toggle:hover {
+            background: var(--card);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ==================== PAGE CONTAINERS ==================== */
+        .page {
+            display: none;
+            min-height: 100vh;
+            animation: fadePageIn 0.4s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadePageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 100px 20px 60px;
+            background: linear-gradient(180deg, #EFF6FF 0%, #F8FAFC 60%);
+        }
+        body.dark .hero {
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 60%);
+        }
+        .hero-bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: hero-float 10s ease-in-out infinite;
+        }
+        .hero-shape.shape-1 {
+            width: 400px;
+            height: 400px;
+            background: #2563EB;
+            top: -80px;
+            right: -60px;
+            animation-delay: 0s;
+        }
+        .hero-shape.shape-2 {
+            width: 300px;
+            height: 300px;
+            background: #7C3AED;
+            bottom: -60px;
+            left: -60px;
+            animation-delay: -4s;
+        }
+        .hero-shape.shape-3 {
+            width: 200px;
+            height: 200px;
+            background: #10B981;
+            top: 50%;
+            left: 40%;
+            animation-delay: -7s;
+        }
+        @keyframes hero-float {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(40px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-25px, 20px) scale(0.9);
+            }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 750px;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.25);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2563EB;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero h1 {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            animation: fadeInUp 0.6s ease 0.1s both;
+            color: var(--text);
+        }
+        .hero h1 span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+            font-family: 'Inter', sans-serif;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+        .btn {
+            padding: 13px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn:active::after {
+            width: 400px;
+            height: 400px;
+        }
+        .btn-primary {
+            background: var(--gradient-1);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(37, 99, 235, 0.35);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 10px 36px rgba(37, 99, 235, 0.55);
+            transform: translateY(-3px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #2563EB;
+            border: 2px solid #2563EB;
+        }
+        .btn-outline:hover {
+            background: #2563EB;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+        .btn-success {
+            background: #10B981;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+        .btn-sm {
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            border-radius: 40px;
+        }
+
+        /* ==================== SECTION STYLES ==================== */
+        .section {
+            padding: 80px 20px;
+            position: relative;
+        }
+        .section-container {
+            max-width: 1150px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            color: var(--text);
+        }
+        .section-title span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 50px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ==================== CARDS ==================== */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 22px;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            cursor: pointer;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px);
+            border-color: #2563EB40;
+        }
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 14px;
+            display: inline-block;
+            transition: transform var(--transition);
+        }
+        .card:hover .card-icon {
+            transform: scale(1.15);
+        }
+        .card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        /* ==================== STATS ==================== */
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            text-align: center;
+        }
+        .stat-item .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-item .stat-label {
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* ==================== TIMELINE ==================== */
+        .timeline-h {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+        }
+        .timeline-h::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 5%;
+            width: 90%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #2563EB, #7C3AED, #10B981, transparent);
+            z-index: 0;
+            border-radius: 10px;
+        }
+        .timeline-step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            min-width: 100px;
+            max-width: 150px;
+        }
+        .timeline-dot {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+        .timeline-step h4 {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .timeline-step p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ==================== TESTIMONIAL SLIDER ==================== */
+        .testimonial-slider {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 20px 0;
+            scrollbar-width: none;
+        }
+        .testimonial-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .testimonial-card {
+            min-width: 320px;
+            max-width: 380px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 26px 22px;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+        .testimonial-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .testimonial-card .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .reviewer-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .stars {
+            color: #F59E0B;
+            font-size: 0.9rem;
+        }
+        .testimonial-card p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-style: italic;
+        }
+
+        /* ==================== FAQ ==================== */
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .faq-item:hover {
+            border-color: #2563EB40;
+        }
+        .faq-question {
+            padding: 16px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 20px 16px;
+        }
+        .faq-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.7rem;
+        }
+        .faq-item.active .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* ==================== AUTH PAGES ==================== */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+            background: linear-gradient(180deg, #EFF6FF 0%, #F8FAFC 100%);
+        }
+        body.dark .auth-container {
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+        }
+        .auth-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.5s ease;
+        }
+        .auth-card h2 {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+        .auth-card .auth-logo {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .auth-card .form-group {
+            margin-bottom: 14px;
+        }
+        .auth-card label {
+            display: block;
+            font-size: 0.83rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+        .auth-card input,
+        .auth-card select,
+        .auth-card textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: all var(--transition);
+            outline: none;
+        }
+        .auth-card input:focus,
+        .auth-card select:focus,
+        .auth-card textarea:focus {
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .auth-card .btn-full {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-1);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+        }
+        .auth-card .btn-full:hover {
+            box-shadow: 0 8px 28px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+        .auth-card .text-link {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+        .auth-card .text-link a {
+            color: #2563EB;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .auth-card .text-link a:hover {
+            text-decoration: underline;
+        }
+        .password-strength {
+            height: 4px;
+            border-radius: 10px;
+            margin-top: 4px;
+            transition: all var(--transition);
+            background: #E2E8F0;
+        }
+        .password-strength.weak {
+            background: #EF4444;
+            width: 30%;
+        }
+        .password-strength.medium {
+            background: #F59E0B;
+            width: 60%;
+        }
+        .password-strength.strong {
+            background: #10B981;
+            width: 100%;
+        }
+
+        /* ==================== DASHBOARD ==================== */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+        .dashboard-sidebar {
+            width: 260px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 20px 16px;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 10;
+            transition: transform var(--transition);
+        }
+        .dashboard-main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px 24px;
+            background: var(--bg);
+        }
+        .sidebar-menu {
+            list-style: none;
+        }
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(37, 99, 235, 0.08);
+            color: #2563EB;
+        }
+        .dashboard-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ==================== PROGRESS BAR ==================== */
+        .progress-bar {
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        body.dark .progress-bar {
+            background: #334155;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#2563EB var(--progress, 0%), #E2E8F0 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto;
+        }
+        body.dark .progress-circle {
+            background: conic-gradient(#2563EB var(--progress, 0%), #334155 0);
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 99980;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            animation: modal-in 0.35s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        @keyframes modal-in {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: color var(--transition);
+        }
+        .modal-close:hover {
+            color: #EF4444;
+        }
+
+        /* ==================== STATUS TIMELINE VERTICAL ==================== */
+        .status-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .status-timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #E2E8F0;
+        }
+        .status-item {
+            position: relative;
+            margin-bottom: 22px;
+            padding-left: 20px;
+        }
+        .status-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 4px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #E2E8F0;
+            border: 3px solid #fff;
+            z-index: 1;
+        }
+        .status-item.completed::before {
+            background: #10B981;
+            border-color: #10B981;
+        }
+        .status-item.active::before {
+            background: #2563EB;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.2);
+        }
+        .status-item h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+        .status-item p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .dashboard-sidebar {
+                transform: translateX(-100%);
+                z-index: 999;
+                top: 60px;
+                width: 260px;
+            }
+            .dashboard-sidebar.open {
+                transform: translateX(0);
+            }
+            .dashboard-main {
+                margin-left: 0;
+            }
+            .dashboard-toggle {
+                display: block;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 999;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: var(--gradient-1);
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                font-size: 1.4rem;
+                box-shadow: var(--shadow-lg);
+            }
+        }
+        @media (min-width: 1025px) {
+            .dashboard-toggle {
+                display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 0.95rem;
+            }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: var(--card);
+                flex-direction: column;
+                justify-content: center;
+                gap: 28px;
+                z-index: 998;
+                padding: 40px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-hamburger {
+                display: flex;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .stats-row {
+                gap: 30px;
+            }
+            .stat-item .stat-number {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 1.7rem;
+            }
+            .timeline-h::before {
+                display: none;
+            }
+            .timeline-h {
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+            .auth-card {
+                padding: 24px 18px;
+            }
+            .dashboard-sidebar {
+                width: 240px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+            .btn {
+                padding: 11px 20px;
+                font-size: 0.8rem;
+            }
+            .card-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .card {
+                padding: 18px 12px;
+            }
+            .card-icon {
+                font-size: 2rem;
+            }
+            .testimonial-card {
+                min-width: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== PAGE LOADER ==================== -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-logo">RAJ ADMISSION</div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a class="nav-logo" onclick="navigateTo('home')">
+                <span class="logo-icon">🏫</span> RAJ Admission
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a onclick="navigateTo('home')">Home</a></li>
+                <li><a onclick="scrollToSection('features')">Features</a></li>
+                <li><a onclick="scrollToSection('process')">Process</a></li>
+                <li><a onclick="scrollToSection('faq-section')">FAQ</a></li>
+                <li><a onclick="scrollToSection('contact-section')">Contact</a></li>
+                <li><a onclick="navigateTo('login')">Login</a></li>
+                <li><a onclick="navigateTo('register')">Register</a></li>
+            </ul>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <button class="dark-toggle" id="dark-toggle" title="Toggle Dark Mode" aria-label="Toggle dark mode">🌙</button>
+                <button class="nav-btn" onclick="navigateTo('register')">Apply Now</button>
+                <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HOME PAGE ==================== -->
+    <div class="page active" id="page-home">
+        <!-- HERO -->
+        <section class="hero" id="hero">
+            <div class="hero-bg-shapes">
+                <div class="hero-shape shape-1"></div>
+                <div class="hero-shape shape-2"></div>
+                <div class="hero-shape shape-3"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-badge">📢 Admissions Open 2026-27</div>
+                <h1>Admissions Open for <span>Class 10</span></h1>
+                <p>Complete your admission online in just a few simple steps. Join RAJ School for a bright academic future.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="navigateTo('register')">📝 Apply Now</button>
+                    <button class="btn btn-outline" onclick="navigateTo('login')">🔍 Track Application</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY CHOOSE US -->
+        <section class="section" id="features">
+            <div class="section-container">
+                <h2 class="section-title">Why Choose <span>RAJ School</span>?</h2>
+                <p class="section-subtitle">We provide world-class education with state-of-the-art facilities</p>
+                <div class="card-grid" id="features-grid"></div>
+            </div>
+        </section>
+
+        <!-- ADMISSION PROCESS -->
+        <section class="section" id="process" style="background:var(--card);">
+            <div class="section-container">
+                <h2 class="section-title">Admission <span>Process</span></h2>
+                <p class="section-subtitle">Simple 6-step process to secure your seat</p>
+                <div class="timeline-h" id="process-timeline"></div>
+            </div>
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="section">
+            <div class="section-container">
+                <h2 class="section-title">Our <span>Numbers</span> Speak</h2>
+                <p class="section-subtitle">Proud of our achievements and community</p>
+                <div class="stats-row" id="stats-row"></div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="section" style="background:var(--card);">
+            <div class="section-container">
+                <h2 class="section-title">What People <span>Say</span></h2>
+                <p class="section-subtitle">Hear from our students and parents</p>
+                <div class="testimonial-slider" id="testimonial-slider"></div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section" id="faq-section">
+            <div class="section-container">
+                <h2 class="section-title">Frequently <span>Asked</span> Questions</h2>
+                <p class="section-subtitle">Everything you need to know about admissions</p>
+                <div class="faq-list" id="faq-list"></div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="section" id="contact-section" style="background:var(--card);">
+            <div class="section-container">
+                <h2 class="section-title">Get In <span>Touch</span></h2>
+                <p class="section-subtitle">We're here to help you</p>
+                <div style="max-width:500px;margin:0 auto;">
+                    <div class="auth-card" style="box-shadow:var(--shadow-md);">
+                        <input type="text" placeholder="Your Name" id="contact-name" style="margin-bottom:10px;">
+                        <input type="email" placeholder="Your Email" id="contact-email" style="margin-bottom:10px;">
+                        <textarea rows="3" placeholder="Your Message" id="contact-msg" style="margin-bottom:10px;width:100%;padding:11px 14px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;resize:vertical;"></textarea>
+                        <button class="btn btn-primary btn-full" onclick="submitContact()">Send Message ✉️</button>
+                        <p style="text-align:center;margin-top:10px;color:var(--text-secondary);font-size:0.85rem;">📞 +91 98765 43210 | ✉️ admissions@rajschool.edu</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer style="text-align:center;padding:30px 20px;background:var(--card);border-top:1px solid var(--border);color:var(--text-secondary);font-size:0.85rem;">
+            <p style="font-weight:700;font-size:1.2rem;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">RAJ ADMISSION</p>
+            <p>© 2026 RAJ School. All rights reserved. | Class 10 Online Admission Portal</p>
+        </footer>
+    </div>
+
+    <!-- ==================== LOGIN PAGE ==================== -->
+    <div class="page" id="page-login">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">RAJ</div>
+                <h2>Student Login</h2>
+                <p style="text-align:center;color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px;">Enter your Admission ID & Password</p>
+                <div class="form-group"><label>Admission ID</label><input type="text" id="login-id" placeholder="e.g. RAJ20260001"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password"></div>
+                <button class="btn-full" onclick="handleLogin()">🔐 Login</button>
+                <p class="text-link"><a onclick="showToast('info','OTP sent to registered mobile')">Forgot Password?</a></p>
+                <p class="text-link">Don't have an account? <a onclick="navigateTo('register')">Register Now</a></p>
+                <p class="text-link"><a onclick="navigateTo('admin')">🔑 Admin Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== REGISTER PAGE ==================== -->
+    <div class="page" id="page-register">
+        <div class="auth-container">
+            <div class="auth-card" style="max-width:560px;">
+                <div class="auth-logo">RAJ</div>
+                <h2>New Admission Registration</h2>
+                <p style="text-align:center;color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px;">Fill in your details to apply for Class 10</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div class="form-group"><label>Student Name *</label><input type="text" id="reg-name" placeholder="Full name"></div>
+                    <div class="form-group"><label>Father's Name *</label><input type="text" id="reg-father" placeholder="Father's name"></div>
+                    <div class="form-group"><label>Mother's Name *</label><input type="text" id="reg-mother" placeholder="Mother's name"></div>
+                    <div class="form-group"><label>Gender *</label><select id="reg-gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+                    <div class="form-group"><label>Date of Birth *</label><input type="date" id="reg-dob"></div>
+                    <div class="form-group"><label>Mobile Number *</label><input type="tel" id="reg-mobile" placeholder="10-digit number"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="email@example.com"></div>
+                    <div class="form-group"><label>Aadhaar Number</label><input type="text" id="reg-aadhaar" placeholder="12-digit Aadhaar"></div>
+                    <div class="form-group"><label>Previous School</label><input type="text" id="reg-school" placeholder="School name"></div>
+                    <div class="form-group"><label>Board</label><select id="reg-board"><option>CBSE</option><option>ICSE</option><option>State Board</option><option>Other</option></select></div>
+                    <div class="form-group"><label>Category</label><select id="reg-category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option></select></div>
+                    <div class="form-group"><label>Blood Group</label><select id="reg-blood"><option>A+</option><option>B+</option><option>O+</option><option>AB+</option><option>A-</option><option>B-</option><option>O-</option><option>AB-</option></select></div>
+                </div>
+                <div class="form-group"><label>Address</label><input type="text" id="reg-address" placeholder="Full address"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                    <div class="form-group"><label>District</label><input type="text" id="reg-district"></div>
+                    <div class="form-group"><label>State</label><input type="text" id="reg-state"></div>
+                    <div class="form-group"><label>PIN Code</label><input type="text" id="reg-pin"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div class="form-group"><label>Create Password *</label><input type="password" id="reg-pass" oninput="checkPasswordStrength()" placeholder="Min 6 characters"></div>
+                    <div class="form-group"><label>Confirm Password *</label><input type="password" id="reg-confirm" placeholder="Re-enter password"></div>
+                </div>
+                <div class="password-strength" id="password-strength-bar"></div>
+                <p style="font-size:0.75rem;color:var(--text-secondary);" id="password-strength-text">Password strength: N/A</p>
+                <button class="btn-full" onclick="handleRegister()">✅ Submit Registration</button>
+                <p class="text-link">Already registered? <a onclick="navigateTo('login')">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STUDENT DASHBOARD ==================== -->
+    <div class="page" id="page-dashboard">
+        <div class="dashboard-layout">
+            <aside class="dashboard-sidebar" id="dashboard-sidebar">
+                <div style="text-align:center;padding:10px 0 16px;font-weight:700;font-size:1.1rem;color:var(--text);">👤 Student Panel</div>
+                <ul class="sidebar-menu">
+                    <li><a class="active" onclick="switchDashboardTab('overview',this)">📊 Overview</a></li>
+                    <li><a onclick="switchDashboardTab('profile',this)">👤 My Profile</a></li>
+                    <li><a onclick="switchDashboardTab('admission-form',this)">📝 Admission Form</a></li>
+                    <li><a onclick="switchDashboardTab('documents',this)">📄 Upload Documents</a></li>
+                    <li><a onclick="switchDashboardTab('payment',this)">💳 Fee Payment</a></li>
+                    <li><a onclick="switchDashboardTab('status',this)">📈 Admission Status</a></li>
+                    <li><a onclick="switchDashboardTab('notifications',this)">🔔 Notifications</a></li>
+                    <li><a onclick="switchDashboardTab('help',this)">🆘 Help Desk</a></li>
+                    <li><a onclick="handleLogout()" style="color:#EF4444;">🚪 Logout</a></li>
+                </ul>
+            </aside>
+            <main class="dashboard-main" id="dashboard-main-content">
+                <!-- Content loaded dynamically -->
+            </main>
+        </div>
+        <button class="dashboard-toggle" id="dashboard-toggle" onclick="toggleSidebar()" style="display:none;">☰</button>
+    </div>
+
+    <!-- ==================== ADMIN DASHBOARD ==================== -->
+    <div class="page" id="page-admin">
+        <div class="auth-container">
+            <div class="auth-card" style="max-width:500px;">
+                <div class="auth-logo">🔑 ADMIN</div>
+                <h2>Admin Login</h2>
+                <div class="form-group"><label>Admin ID</label><input type="text" id="admin-id" placeholder="Admin ID"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="admin-pass" placeholder="Password"></div>
+                <button class="btn-full" onclick="handleAdminLogin()">Login as Admin</button>
+                <div id="admin-panel" style="display:none;margin-top:20px;">
+                    <h3 style="text-align:center;">📊 Admin Overview</h3>
+                    <div class="card-grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+                        <div class="card"><h3>👨‍🎓 156</h3><p>Total Students</p></div>
+                        <div class="card"><h3>⏳ 23</h3><p>Pending</p></div>
+                        <div class="card"><h3>✅ 118</h3><p>Approved</p></div>
+                        <div class="card"><h3>❌ 15</h3><p>Rejected</p></div>
+                    </div>
+                    <button class="btn btn-primary btn-full" style="margin-top:10px;" onclick="showToast('info','Search & filter active')">🔍 Search Students</button>
+                    <button class="btn btn-outline btn-full" style="margin-top:6px;" onclick="showToast('success','PDF Downloaded')">📥 Download Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL OVERLAY ==================== -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content" id="modal-content"></div>
+    </div>
+
+    <script>
+        // ==================== GLOBAL STATE ====================
+        let currentPage = 'home';
+        let isLoggedIn = false;
+        let studentData = null;
+        let admissionId = 'RAJ20260001';
+        let darkMode = false;
+
+        // ==================== PAGE LOADER ====================
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('page-loader').classList.add('hidden'), 1200);
+        });
+
+        // ==================== TOAST SYSTEM ====================
+        function showToast(type, message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3400);
+        }
+
+        // ==================== DARK MODE TOGGLE ====================
+        const darkToggle = document.getElementById('dark-toggle');
+        darkToggle.addEventListener('click', () => {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark', darkMode);
+            darkToggle.textContent = darkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', darkMode);
+        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkMode = true;
+            document.body.classList.add('dark');
+            darkToggle.textContent = '☀️';
+        }
+
+        // ==================== NAVIGATION ====================
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+        function navigateTo(page) {
+            navLinks.classList.remove('open');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById('page-' + page);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                currentPage = page;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (page === 'dashboard' && isLoggedIn) {
+                    switchDashboardTab('overview');
+                }
+                if (page === 'dashboard') {
+                    document.getElementById('dashboard-toggle').style.display = 'block';
+                } else {
+                    document.getElementById('dashboard-toggle').style.display = 'none';
+                }
+            }
+        }
+
+        function scrollToSection(id) {
+            navigateTo('home');
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // ==================== AUTH HANDLERS ====================
+        function handleLogin() {
+            const id = document.getElementById('login-id').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+            if (id && pass) {
+                isLoggedIn = true;
+                admissionId = id;
+                studentData = { name: 'Rahul Sharma', father: 'Rajesh Sharma', mother: 'Sunita Sharma', gender: 'Male',
+                    dob: '2010-05-15', mobile: '9876543210', email: 'rahul@email.com', aadhaar: '123456789012',
+                    school: 'DAV Public School', board: 'CBSE', category: 'General', blood: 'B+',
+                    address: '123, Main Street, Mumbai', district: 'Mumbai', state: 'Maharashtra', pin: '400001' };
+                showToast('success', '✅ Login successful! Welcome back.');
+                navigateTo('dashboard');
+            } else {
+                showToast('error', 'Please enter valid credentials.');
+            }
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+            const confirm = document.getElementById('reg-confirm').value.trim();
+            if (!name) { showToast('error', 'Student name is required.');
+                return; }
+            if (pass.length < 6) { showToast('error', 'Password must be at least 6 characters.');
+                return; }
+            if (pass !== confirm) { showToast('error', 'Passwords do not match.');
+                return; }
+            admissionId = 'RAJ' + new Date().getFullYear() + String(Math.floor(Math.random() * 9000) + 1000);
+            studentData = {
+                name,
+                father: document.getElementById('reg-father').value.trim(),
+                mother: document.getElementById('reg-mother').value.trim(),
+                gender: document.getElementById('reg-gender').value,
+                dob: document.getElementById('reg-dob').value,
+                mobile: document.getElementById('reg-mobile').value.trim(),
+                email: document.getElementById('reg-email').value.trim(),
+                aadhaar: document.getElementById('reg-aadhaar').value.trim(),
+                school: document.getElementById('reg-school').value.trim(),
+                board: document.getElementById('reg-board').value,
+                category: document.getElementById('reg-category').value,
+                blood: document.getElementById('reg-blood').value,
+                address: document.getElementById('reg-address').value.trim(),
+                district: document.getElementById('reg-district').value.trim(),
+                state: document.getElementById('reg-state').value.trim(),
+                pin: document.getElementById('reg-pin').value.trim()
+            };
+            isLoggedIn = true;
+            showToast('success',
+                `🎉 Registration successful! Your Admission ID: ${admissionId}. Please save this for future login.`);
+            setTimeout(() => navigateTo('dashboard'), 1500);
+        }
+
+        function handleLogout() {
+            isLoggedIn = false;
+            studentData = null;
+            showToast('info', '👋 Logged out successfully.');
+            navigateTo('home');
+        }
+
+        function handleAdminLogin() {
+            const id = document.getElementById('admin-id').value.trim();
+            const pass = document.getElementById('admin-pass').value.trim();
+            if (id && pass) {
+                document.getElementById('admin-panel').style.display = 'block';
+                showToast('success', '✅ Admin logged in successfully.');
+            } else {
+                showToast('error', 'Invalid admin credentials.');
+            }
+        }
+
+        function checkPasswordStrength() {
+            const pass = document.getElementById('reg-pass').value;
+            const bar = document.getElementById('password-strength-bar');
+            const text = document.getElementById('password-strength-text');
+            bar.className = 'password-strength';
+            if (pass.length === 0) { bar.className = 'password-strength';
+                text.textContent = 'Password strength: N/A'; return; }
+            if (pass.length < 4) { bar.classList.add('weak');
+                text.textContent = 'Password strength: Weak'; } else if (pass.length < 7) { bar.classList.add('medium');
+                text.textContent = 'Password strength: Medium'; } else { bar.classList.add('strong');
+                text.textContent = 'Password strength: Strong'; }
+        }
+
+        // ==================== DASHBOARD SIDEBAR ====================
+        function toggleSidebar() {
+            document.getElementById('dashboard-sidebar').classList.toggle('open');
+        }
+
+        function switchDashboardTab(tab, linkEl) {
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            if (linkEl) linkEl.classList.add('active');
+            const main = document.getElementById('dashboard-main-content');
+            const data = studentData || { name: 'Student', admissionId: admissionId || 'N/A' };
+            switch (tab) {
+                case 'overview':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">📊 Dashboard Overview</h2>
+                <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;">
+                  <div class="dashboard-card"><h3 style="color:#2563EB;">👤 Profile</h3><p>View & edit your profile</p><button class="btn btn-sm btn-outline" onclick="switchDashboardTab('profile',document.querySelector('.sidebar-menu a'))">View</button></div>
+                  <div class="dashboard-card"><h3 style="color:#10B981;">📈 Status</h3><p>Application under review</p><span style="background:#10B98120;color:#10B981;padding:4px 10px;border-radius:20px;font-size:0.8rem;">Active</span></div>
+                  <div class="dashboard-card"><h3 style="color:#F59E0B;">📄 Documents</h3><p>3 of 8 uploaded</p><div class="progress-bar"><div class="progress-fill" style="width:37%;"></div></div></div>
+                  <div class="dashboard-card"><h3 style="color:#7C3AED;">💳 Payment</h3><p>Fee pending</p><button class="btn btn-sm btn-primary" onclick="switchDashboardTab('payment',document.querySelector('.sidebar-menu a'))">Pay Now</button></div>
+                </div>
+                <div style="margin-top:20px;" class="dashboard-card"><h3>🔔 Recent Notifications</h3><p style="color:var(--text-secondary);">📢 Admission deadline extended to July 30, 2026.</p><p style="color:var(--text-secondary);">✅ Documents verified successfully.</p></div>`;
+                    break;
+                case 'profile':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">👤 My Profile</h2>
+                <div class="dashboard-card">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.9rem;">
+                    <p><strong>Name:</strong> ${data.name}</p><p><strong>Father:</strong> ${data.father||'N/A'}</p>
+                    <p><strong>Mother:</strong> ${data.mother||'N/A'}</p><p><strong>Gender:</strong> ${data.gender||'N/A'}</p>
+                    <p><strong>DOB:</strong> ${data.dob||'N/A'}</p><p><strong>Mobile:</strong> ${data.mobile||'N/A'}</p>
+                    <p><strong>Email:</strong> ${data.email||'N/A'}</p><p><strong>Aadhaar:</strong> ${data.aadhaar||'N/A'}</p>
+                    <p><strong>School:</strong> ${data.school||'N/A'}</p><p><strong>Board:</strong> ${data.board||'N/A'}</p>
+                    <p><strong>Category:</strong> ${data.category||'N/A'}</p><p><strong>Blood Group:</strong> ${data.blood||'N/A'}</p>
+                    <p><strong>Address:</strong> ${data.address||'N/A'}</p><p><strong>Admission ID:</strong> ${admissionId}</p>
+                  </div>
+                  <button class="btn btn-primary" style="margin-top:12px;" onclick="showToast('info','Profile edit mode activated')">✏️ Edit Profile</button>
+                </div>`;
+                    break;
+                case 'admission-form':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:10px;">📝 Admission Form</h2>
+                <div class="progress-bar"><div class="progress-fill" id="form-progress" style="width:40%;"></div></div>
+                <p style="color:var(--text-secondary);font-size:0.85rem;">Progress: <span id="form-progress-text">40%</span></p>
+                <div class="dashboard-card" style="margin-top:10px;">
+                  <h4>Personal Information</h4>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <input type="text" placeholder="Full Name" value="${data.name||''}"><input type="text" placeholder="Father's Name" value="${data.father||''}">
+                    <input type="text" placeholder="Mother's Name" value="${data.mother||''}"><input type="date" value="${data.dob||''}">
+                  </div>
+                  <h4 style="margin-top:12px;">Emergency Contact</h4>
+                  <input type="text" placeholder="Emergency Contact Name"><input type="tel" placeholder="Emergency Phone" style="margin-top:8px;">
+                  <label style="margin-top:10px;display:flex;align-items:center;gap:8px;"><input type="checkbox"> I declare all information is correct</label>
+                  <button class="btn btn-primary" style="margin-top:10px;" onclick="document.getElementById('form-progress').style.width='80%';document.getElementById('form-progress-text').textContent='80%';showToast('success','Form auto-saved!')">💾 Save & Continue</button>
+                </div>`;
+                    break;
+                case 'documents':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">📄 Upload Documents</h2>
+                <div class="dashboard-card">
+                  <p style="color:var(--text-secondary);">Upload required documents for verification</p>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+                    ${['Passport Photo','Signature','Birth Certificate','Transfer Certificate','Previous Marksheet','Aadhaar Card','Caste Certificate','Income Certificate'].map(d=>`
+                      <div style="border:2px dashed var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;" onclick="showToast('info','📎 ${d} upload simulated')">
+                        <span style="font-size:1.5rem;">📤</span><p style="font-size:0.8rem;">${d}</p>
+                      </div>`).join('')}
+                  </div>
+                  <div class="progress-bar" style="margin-top:14px;"><div class="progress-fill" style="width:37%;"></div></div>
+                  <p style="font-size:0.8rem;color:var(--text-secondary);">3 of 8 documents uploaded</p>
+                </div>`;
+                    break;
+                case 'payment':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">💳 Fee Payment</h2>
+                <div class="dashboard-card">
+                  <p><strong>Total Fee:</strong> ₹25,000</p><p><strong>Due Date:</strong> July 30, 2026</p>
+                  <h4 style="margin-top:12px;">Select Payment Method:</h4>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+                    ${['UPI','Debit Card','Credit Card','Net Banking','Wallet'].map(m=>`
+                      <button class="btn btn-outline btn-sm" onclick="showToast('success','✅ Payment of ₹25,000 via ${m} successful! Receipt generated.')">${m}</button>`).join('')}
+                  </div>
+                  <button class="btn btn-success btn-full" style="margin-top:12px;" onclick="showToast('success','🧾 Receipt downloaded successfully!')">📥 Download Receipt</button>
+                </div>`;
+                    break;
+                case 'status':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">📈 Admission Status</h2>
+                <div class="dashboard-card">
+                  <div class="status-timeline">
+                    <div class="status-item completed"><h4>Application Submitted</h4><p>June 15, 2026</p></div>
+                    <div class="status-item completed"><h4>Documents Verified</h4><p>June 20, 2026</p></div>
+                    <div class="status-item active"><h4>Payment Confirmed</h4><p>Pending - Awaiting payment</p></div>
+                    <div class="status-item"><h4>Admission Approved</h4><p>Waiting for previous step</p></div>
+                    <div class="status-item"><h4>Roll Number Generated</h4><p>Waiting for approval</p></div>
+                    <div class="status-item"><h4>Admission Complete 🎉</h4><p>Final step</p></div>
+                  </div>
+                </div>`;
+                    break;
+                case 'notifications':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">🔔 Notifications</h2>
+                <div class="dashboard-card">
+                  ${['📢 Admission deadline extended to July 30, 2026.','✅ Your documents have been verified.','📅 Class 10 orientation on August 5, 2026.','🎒 School uniform distribution from August 1.','🏫 New academic session begins August 10, 2026.'].map(n=>`<p style="padding:8px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);font-size:0.9rem;">${n}</p>`).join('')}
+                </div>`;
+                    break;
+                case 'help':
+                    main.innerHTML = `
+                <h2 style="margin-bottom:16px;">🆘 Help Desk</h2>
+                <div class="dashboard-card">
+                  <h4>📞 Contact Us</h4><p>Phone: +91 98765 43210</p><p>Email: help@rajschool.edu</p>
+                  <h4 style="margin-top:12px;">❓ Quick FAQ</h4>
+                  <p style="color:var(--text-secondary);">Q: How to reset password?<br>A: Use the Forgot Password link on the login page.</p>
+                  <p style="color:var(--text-secondary);">Q: Document upload failed?<br>A: Ensure file size is under 2MB and format is JPG/PDF.</p>
+                  <button class="btn btn-primary" style="margin-top:10px;" onclick="showToast('info','💬 Live chat agent will connect shortly')">💬 Start Live Chat</button>
+                </div>`;
+                    break;
+            }
+        }
+
+        // ==================== MODAL SYSTEM ====================
+        function openModal(contentHTML) {
+            document.getElementById('modal-content').innerHTML = `
+            <button class="modal-close" onclick="closeModal()">✕</button>${contentHTML}`;
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+        document.getElementById('modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+        // ==================== CONTACT FORM ====================
+        function submitContact() {
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const msg = document.getElementById('contact-msg').value.trim();
+            if (name && email && msg) {
+                showToast('success', '✅ Message sent! We\'ll get back to you soon.');
+                document.getElementById('contact-name').value = '';
+                document.getElementById('contact-email').value = '';
+                document.getElementById('contact-msg').value = '';
+            } else {
+                showToast('error', 'Please fill all fields.');
+            }
+        }
+
+        // ==================== POPULATE HOME PAGE DATA ====================
+        function populateHomePage() {
+            // Features grid
+            const features = [
+                { icon: '👨‍🏫', title: 'Experienced Teachers', desc: 'Highly qualified faculty with 15+ years experience' },
+                { icon: '💻', title: 'Smart Classrooms', desc: 'Digital boards & modern teaching tools' },
+                { icon: '🔬', title: 'Science Labs', desc: 'Well-equipped Physics, Chemistry & Biology labs' },
+                { icon: '🖥️', title: 'Computer Labs', desc: 'Latest computers with high-speed internet' },
+                { icon: '⚽', title: 'Sports Complex', desc: 'Cricket, football, basketball & indoor games' },
+                { icon: '📚', title: 'Library', desc: '10,000+ books, journals & digital resources' },
+                { icon: '🎓', title: 'Scholarship', desc: 'Merit-based scholarships for deserving students' },
+                { icon: '🚌', title: 'Transport', desc: 'Safe & reliable bus service across the city' },
+            ];
+            document.getElementById('features-grid').innerHTML = features.map(f => `
+            <div class="card"><div class="card-icon">${f.icon}</div><h3>${f.title}</h3><p>${f.desc}</p></div>`).join('');
+
+            // Process timeline
+            const steps = ['Register', 'Fill Form', 'Upload Docs', 'Pay Fees', 'Verification', 'Confirmed 🎉'];
+            document.getElementById('process-timeline').innerHTML = steps.map((s, i) => `
+            <div class="timeline-step"><div class="timeline-dot">${i+1}</div><h4>${s}</h4></div>`).join('');
+
+            // Stats
+            document.getElementById('stats-row').innerHTML = [
+                { num: '5000', label: '+ Students' }, { num: '120', label: '+ Teachers' }, { num: '98', label: '% Success Rate' },
+                { num: '35', label: '+ Years of Excellence' }
+            ].map(s => `
+            <div class="stat-item"><div class="stat-number" data-target="${parseInt(s.num)}">${s.num}</div><div class="stat-label">${s.label}</div></div>`)
+                .join('');
+
+            // Testimonials
+            document.getElementById('testimonial-slider').innerHTML = [
+                { name: 'Priya Verma', role: 'Parent',
+                    text: 'RAJ School provided excellent support during the admission process. The online portal made everything so easy!' },
+                { name: 'Arjun Singh', role: 'Student',
+                    text: 'I love the smart classrooms and the library. The teachers are very supportive and encouraging.' },
+                { name: 'Meena Gupta', role: 'Parent',
+                    text: 'The transparent fee structure and easy EMI options made it affordable for us. Highly recommended!' },
+                { name: 'Rohit Patel', role: 'Alumni',
+                    text: 'Proud to be a RAJ School alumnus. The foundation I received here helped me excel in my career.' },
+            ].map(t => `
+            <div class="testimonial-card">
+              <div class="reviewer"><div class="reviewer-avatar">${t.name[0]}</div><div><strong>${t.name}</strong><div class="stars">★★★★★</div><span style="font-size:0.75rem;color:var(--text-secondary);">${t.role}</span></div></div>
+              <p>"${t.text}"</p>
+            </div>`).join('');
+
+            // FAQ
+            document.getElementById('faq-list').innerHTML = [
+                { q: 'What is the eligibility for Class 10 admission?',
+                    a: 'Students who have completed Class 9 from any recognized board are eligible to apply.' },
+                { q: 'What documents are required?',
+                    a: 'Birth certificate, previous marksheet, transfer certificate, Aadhaar card, and passport photos.' },
+                { q: 'Is there an entrance exam?',
+                    a: 'Yes, there is a simple aptitude test followed by a personal interview with the student and parents.' },
+                { q: 'What are the fees and payment options?',
+                    a: 'Annual fee is ₹25,000. We accept UPI, cards, net banking, and offer EMI options.' },
+                { q: 'When does the academic session start?', a: 'The new academic session begins on August 10, 2026.' },
+            ].map(f => `
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">${f.q} <span class="faq-arrow">▼</span></div>
+              <div class="faq-answer">${f.a}</div>
+            </div>`).join('');
+        }
+
+        function toggleFAQ(el) {
+            const wasActive = el.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('active'));
+            if (!wasActive) el.classList.add('active');
+        }
+
+        // ==================== SCROLL REVEAL ====================
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.card, .timeline-step, .testimonial-card, .stat-item, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            revealObserver.observe(el);
+        });
+
+        // ==================== INITIALIZE ====================
+        populateHomePage();
+        document.getElementById('dashboard-toggle').style.display = 'none';
+
+        // Auto-scroll testimonials
+        setInterval(() => {
+            const slider = document.getElementById('testimonial-slider');
+            if (slider && document.visibilityState === 'visible' && currentPage === 'home') {
+                slider.scrollBy({ left: 340, behavior: 'smooth' });
+                if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 50) {
+                    slider.scrollTo({ left: 0, behavior: 'smooth' });
+                }
+            }
+        }, 4000);
+
+        console.log('%c🏫 RAJ Admission Portal %cReady %c| %cClass 10 Admissions Open',
+            'color:#2563EB;font-size:1.3rem;font-weight:bold;',
+            'color:#10B981;font-weight:bold;',
+            'color:#7C3AED;',
+            'color:#F59E0B;');
+        console.log('%cAll systems loaded. Modern Education Portal active. ✨', 'color:#64748B;');
+    </script>
+</body>
+</html>
